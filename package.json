@@ -1,7 +1,7 @@
 {
-  "name": "derby-orm",
-  "version": "0.1.1",
-  "description": "ORM for Derby",
+  "name": "derby-ar",
+  "version": "0.1.0",
+  "description": "Plugin for helping writing ActiveRecord style/pattern code for Derby",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,15 +13,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BBWeb/derby-orm.git"
+    "url": "https://github.com/BBWeb/derby-ar.git"
   },
   "keywords": [
     "derby",
     "plugin"
   ],
   "bugs": {
-    "url": "https://github.com/BBWeb/derby-orm/issues"
+    "url": "https://github.com/BBWeb/derby-ar/issues"
   },
-  "homepage": "https://github.com/BBWeb/derby-orm",
+  "homepage": "https://github.com/BBWeb/derby-ar",
   "readmeFilename": "README.md"
 }

@@ -1,11 +1,11 @@
-# derby-orm
-Plugin for adding ORM functionality to Derby
+# derby-ar
+Plugin for helping writing ActiveRecord style/pattern code for Derby
 
 How to use
 ==========
 After adding the plugin:
 ```javascript
-derby.use(require('derby-orm'));
+derby.use(require('derby-ar'));
 ```
 
 One can add model layer code automatically to the model layer and schemas:

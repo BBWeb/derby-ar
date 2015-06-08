@@ -1,0 +1,27 @@
+{
+  "name": "derby-orm",
+  "version": "0.1.1",
+  "description": "ORM for Derby",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "racer-schema": "git://github.com/bbweb/racer-schema.git#skip-non-existing-schemas"
+  },
+  "author": "cjblomqvist <carl@cjblomqvist.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BBWeb/derby-orm.git"
+  },
+  "keywords": [
+    "derby",
+    "plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/BBWeb/derby-orm/issues"
+  },
+  "homepage": "https://github.com/BBWeb/derby-orm",
+  "readmeFilename": "README.md"
+}

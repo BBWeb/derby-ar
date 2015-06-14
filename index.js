@@ -47,28 +47,31 @@ module.exports = function(racer) {
   Model.prototype.scope = function(path) {
     var segments = this.__splitPath(path);
 
+    // No segments - no point in parsing further
     if(!segments.length) return this._scope(path);
 
-    var Model = racer._models[segments[0]];
-
-    // No classes saved to this collection path
-    if(!Model) return this._scope(path);
-
     // Dereference to simplify checks (if refs are present)
-    var dereferencedSegments = this._dereference(segments);
+    var dereferencedSegments = this._dereference(segments, true);
     var dereferenced = dereferencedSegments.join('.');
 
-    if(segments.length === 1 && Model.Collection) {
+    // Get Models
+    var Model = racer._models[segments[0]];
+    var dereferencedModel = racer._models[dereferencedSegments[0]];
+
+    // Only allow collection level models straight up from non-dereferenced Models,
+    // since otherwise we're either moving through a ref to a collection, which is just pointless (or is it?)
+    // or we're moving through a refList on the refList level which doesn't point to the whole collection but only a subset of it - and in those scenarios we don't want a Collection Model to be returned
+    // TODO: Revise assumption above, it seems that in some scenarios you'd want to create regular references to a whole collection like if you'd want to reference a certain global collection to a component's view model so that the component could render all of it (though, then it might be a special case of above where it is a "subset" that just happens to be all of the items of the original collection)
+    if(Model && segments.length === 1 && Model.Collection) {
       // We are at a collection level, return Collection instance
-      // TODO: Add support for refList collections
-
+      // TODO: Add support for refList collections? See above
       return this._createCollection(path, Model.Collection);
-    } else if(dereferencedSegments.length === 2 && Model.Item) {
+    } else if(dereferencedModel && dereferencedSegments.length === 2 && dereferencedModel.Item) {
       // We are at an item level, return Item instance
-
-      return this._createItem(dereferenced, Model.Item);
+      return this._createItem(dereferenced, dereferencedModel.Item);
     }
 
+    // Always fallback on original scope/regular Child Model
     return this._scope(path);
   };
 

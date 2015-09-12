@@ -50,6 +50,23 @@ myCollection.subscribe(function () {
 ...
 ```
 
+Features
+========
+In addition to the base functionality described above, one can call each method as a RPC (Remote Procedure Call), and one can easily switch between ensuring certain methods are only processed server-side. This is useful when one does not trust the client do so certain processing, e.g. when certain processesing is to cumbersome for clients. Any method that exists on any Collection or Item class, can also be triggered in the following manner to process it server-side:
+
+```javascript
+// Trigger myMethod client-side, just like normally
+myCollection.myMethod(myArg1, myArg2, callback);
+
+// Trigger myMethod as a RPC
+myCollection.myMethod.rpc(myArg1, myArg2, callback);
+```
+
+E.g. the only difference in how to call a method as a RPC (and make it process server-side) is to add `.rpc` after the method. The same parameters should be passed. Noteworthy is that a function can in some instances be triggered client side and in some instances triggered as a RPC - this is fully up to the caller.
+
+NOTE! There's one requirement for any method which is possibly called as a RPC. It needs to have a callback function (since RPCs are always asynchronous), and the callback needs to be the last argument passed.
+NOTE 2! This does not protect the methods - they are still passed along to the client.
+
 How it works
 ============
 Automatically when scoping a model to a collection or item level which has CollectionConstructor and/or ItemConstructor added, the scoped model will inherit the prototype of the Collection/Item-Constructor. Thus, all normal model operations are possible, such as examplified below:

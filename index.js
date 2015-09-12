@@ -1,4 +1,8 @@
-module.exports = function(racer) {
+var _ = require('lodash');
+
+// TODO: Split up into one separate file for the server and one for the client for faster loading and less useless code transmitted to the client?
+module.exports = function(derby) {
+  var racer = derby;
   var Model = racer.Model;
   var options = {
     schemas: {},
@@ -12,6 +16,33 @@ module.exports = function(racer) {
     // Initiate racer-schema ASAP model is initiated as we then know no more models can be added
     racer.use(require('racer-schema'), options);
   });
+
+  // Add RPC support
+  // Wrap createStore in order to be able to listen to RPC calls
+  // But only do it once (e.g. if we have many apps, we need to ensure we only wrap it once since otherwise we'll destroy the wrapping)
+  if(!derby._createStore) {
+    derby._createStore = derby.createStore;
+    derby.createStore = function () {
+      // Create store using regular creatStory method
+      var store = this._createStore.apply(this, arguments);
+
+      store.on('client', function (client) {
+        client.channel.on('derby-ar-rpc', function (data, cb) {
+          var method = data.method;
+          var args = data.args;
+          var path = data.path;
+          var model = store.createModel();
+
+          args.push(cb);
+
+          var $scoped = model.scope(path);
+          $scoped[method].apply($scoped, args);
+        });
+      });
+
+      return store;
+    };
+  }
 
   /**
    * Adds model classes to Racer
@@ -88,6 +119,8 @@ module.exports = function(racer) {
   Model.prototype._createCollection = function(path, constructor) {
     function Collection() {}
 
+    constructor.prototype = addRPC(this, path, constructor.prototype);
+
     Collection.prototype = racer.util.mergeInto(this._scope(path), constructor.prototype);
 
     return new Collection();
@@ -95,6 +128,8 @@ module.exports = function(racer) {
 
   Model.prototype._createItem = function(path, constructor) {
     function Item() {}
+
+    constructor.prototype = addRPC(this, path, constructor.prototype);
 
     Item.prototype = racer.util.mergeInto(this._scope(path), constructor.prototype);
 
@@ -121,3 +156,28 @@ module.exports = function(racer) {
   }
   ChildModel.prototype = new Model();
 };
+
+function addRPC(model, path, prototype) {
+  function rpcClosure(model, path, method) {
+    var model = model;
+    var path = path;
+    var method = method;
+
+    return function rpc() {
+      var args = Array.prototype.slice.call(arguments);
+      var cb = args.pop();
+
+      if(!cb) cb = new Function();
+
+      var data = {method: method, path: path, args: args};
+
+      model.channel.send('derby-ar-rpc', data, cb);
+    }
+  }
+
+  _.each(prototype, function (fn, method) {
+    fn.rpc = rpcClosure(model, path, method);
+  });
+
+  return prototype;
+}

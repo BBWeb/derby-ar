@@ -1,6 +1,7 @@
 var _ = require('lodash');
 
 // TODO: Split up into one separate file for the server and one for the client for faster loading and less useless code transmitted to the client?
+// See: https://github.com/derbyparty/derby-faq/tree/master/en#how-to-require-a-module-that-will-run-only-on-the-server-of-a-derby-application
 module.exports = function(derby) {
   var racer = derby;
   var Model = racer.Model;
@@ -171,7 +172,7 @@ function addRPC(model, path, prototype) {
 
       var data = {method: method, path: path, args: args};
 
-      model.channel.send('derby-ar-rpc', data, cb);
+      model.root.channel.send('derby-ar-rpc', data, cb);
     }
   }
 

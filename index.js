@@ -166,9 +166,12 @@ function addRPC(model, path, prototype) {
 
     return function rpc() {
       var args = Array.prototype.slice.call(arguments);
-      var cb = args.pop();
 
-      if(!cb) cb = new Function();
+      if(!args.length || !_.isFunction(args[args.length - 1])) {
+        var cb = new Function();
+      } else {
+        var cb = args.pop();
+      }
 
       var data = {method: method, path: path, args: args};
 

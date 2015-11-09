@@ -67,6 +67,31 @@ E.g. the only difference in how to call a method as a RPC (and make it process s
 NOTE! There's one requirement for any method which is possibly called as a RPC. It needs to have a callback function (since RPCs are always asynchronous), and the callback needs to be the last argument passed.
 NOTE 2! This does not protect the methods - they are still passed along to the client.
 
+Derby-services
+==============
+Derby-ar includes derby-services on default, which means you can conveniently add services in a similar fashion to how active records are added. The difference is that services are not tied to a specific collection (behind the scenes, it's just a simple wrapper for conveniently creating JS classes).
+
+```javascript
+function MyService() {}
+
+// The name is used for looking up the proper service when accesing it on the model
+MyService.prototype.name = 'myService';
+
+MyService.prototype.hello = function () {
+  console.log('hello world!');
+};
+
+// Register the service with racer
+racer.service(MyService);
+
+...
+
+// In your application code
+var $myService = model.service('myService');
+$myService.hello();
+// Output: 'hello world'
+```
+
 How it works
 ============
 Automatically when scoping a model to a collection or item level which has CollectionConstructor and/or ItemConstructor added, the scoped model will inherit the prototype of the Collection/Item-Constructor. Thus, all normal model operations are possible, such as examplified below:

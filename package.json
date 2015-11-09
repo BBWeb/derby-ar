@@ -1,12 +1,13 @@
 {
   "name": "derby-ar",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Plugin for helping writing ActiveRecord style/pattern code for Derby",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "lodash": "*",
     "racer-schema": "git://github.com/bbweb/racer-schema.git#skip-non-existing-schemas"
   },
   "author": "cjblomqvist <carl@cjblomqvist.com>",

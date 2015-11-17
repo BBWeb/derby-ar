@@ -1,6 +1,6 @@
 {
   "name": "derby-ar",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Plugin for helping writing ActiveRecord style/pattern code for Derby",
   "main": "lib/index.js",
   "scripts": {

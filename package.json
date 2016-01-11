@@ -9,8 +9,7 @@
   "dependencies": {
     "derby-services": "*",
     "lodash": "*",
-    "racer-schema": "git://github.com/bbweb/racer-schema.git#skip-non-existing-schemas",
-    "sharedb": ">= 0.11.0"
+    "racer-schema": "git://github.com/bbweb/racer-schema.git#skip-non-existing-schemas"
   },
   "peerDependencies": {
     "racer": "^0.8.0"
